@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Quick Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .test-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-card h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .test-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .test-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .test-result.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .test-result.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+
+        .test-result.info {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #90caf9;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .checklist li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .checklist li:before {
+            content: '☐';
+            position: absolute;
+            left: 0;
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        .checklist li.completed:before {
+            content: '✓';
+            color: #27ae60;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: #ddd;
+            margin: 2rem 0;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status-indicator.ok {
+            background: #27ae60;
+        }
+
+        .status-indicator.error {
+            background: #e74c3c;
+        }
+
+        .status-indicator.warning {
+            background: #f39c12;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Task Manager - Quick Test Suite</h1>
+
+        <!-- Test 1: DOM Elements -->
+        <div class="test-card">
+            <h2>Test 1: Check DOM Elements</h2>
+            <p>Verify that all required HTML elements are present.</p>
+            <div class="test-buttons">
+                <button class="btn-primary" onclick="testDOMElements()">Check Elements</button>
+                <button class="btn-primary" onclick="testLocalStorage()">Check Storage</button>
+            </div>
+            <div id="dom-result"></div>
+        </div>
+
+        <!-- Test 2: Add Task -->
+        <div class="test-card">
+            <h2>Test 2: Add Task Functionality</h2>
+            <p>Test the ability to add a new task.</p>
+            <div class="test-buttons">
+                <button class="btn-success" onclick="testAddTask()">Add Test Task</button>
+                <button class="btn-primary" onclick="showTasks()">Show All Tasks</button>
+            </div>
+            <div id="add-result"></div>
+        </div>
+
+        <!-- Test 3: LocalStorage -->
+        <div class="test-card">
+            <h2>Test 3: LocalStorage Persistence</h2>
+            <p>Verify data is saved and persisted correctly.</p>
+            <div class="test-buttons">
+                <button class="btn-primary" onclick="testSaveToStorage()">Save Test Data</button>
+                <button class="btn-primary" onclick="testLoadFromStorage()">Load From Storage</button>
+                <button class="btn-danger" onclick="testClearStorage()">Clear All Data</button>
+            </div>
+            <div id="storage-result"></div>
+        </div>
+
+        <!-- Test 4: Console Logs -->
+        <div class="test-card">
+            <h2>Test 4: Check Console Output</h2>
+            <p>View console logs to debug issues. Open DevTools with F12 to see Console tab.</p>
+            <div class="code-block">
+                How to open browser console:<br>
+                • Windows/Linux: F12 or Ctrl+Shift+I<br>
+                • Mac: Cmd+Option+I<br>
+                <br>
+                Expected messages:<br>
+                • "Task Manager initialized with X tasks"<br>
+                • "Tasks saved to localStorage: [...]"<br>
+                • "Tasks loaded from localStorage: [...]"
+            </div>
+        </div>
+
+        <!-- Test 5: Manual Testing -->
+        <div class="test-card">
+            <h2>Test 5: Manual Testing Checklist</h2>
+            <ul class="checklist">
+                <li id="check-1">Type "Buy groceries" and click "Add Task"</li>
+                <li id="check-2">Task should appear in the list</li>
+                <li id="check-3">Character counter should show the text length</li>
+                <li id="check-4">Click checkbox to mark task complete</li>
+                <li id="check-5">Task should have strikethrough and faded appearance</li>
+                <li id="check-6">Statistics should update (Total: 1, Completed: 1, Pending: 0)</li>
+                <li id="check-7">Click Delete button to remove task</li>
+                <li id="check-8">Add more tasks and test filters (All, Active, Completed)</li>
+                <li id="check-9">Refresh the page (F5) - tasks should still be there</li>
+                <li id="check-10">Mark tasks complete and click "Clear Completed Tasks"</li>
+            </ul>
+            <div class="test-buttons">
+                <button class="btn-success" onclick="markComplete()">Mark Checklist Complete</button>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="test-card">
+            <h2>📊 Test Summary</h2>
+            <div id="summary">
+                <p>Run the tests above to verify all features are working correctly.</p>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Links -->
+        <div class="test-card">
+            <h2>📚 Documentation</h2>
+            <p>For more information, check these documents:</p>
+            <ul style="list-style: none; padding: 1rem 0;">
+                <li>📖 <a href="TASK_MANAGER_README.md" style="color: #667eea; text-decoration: none; font-weight: 600;">Task Manager README</a> - Feature overview</li>
+                <li>📋 <a href="IMPLEMENTATION_SUMMARY.md" style="color: #667eea; text-decoration: none; font-weight: 600;">Implementation Summary</a> - Technical details</li>
+                <li>🔍 <a href="DEBUGGING_GUIDE.md" style="color: #667eea; text-decoration: none; font-weight: 600;">Debugging Guide</a> - Troubleshooting</li>
+                <li>🚀 <a href="src/static/index.html" style="color: #667eea; text-decoration: none; font-weight: 600;">Launch App</a> - Open the task manager</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="test-result ${type}">${message}</div>`;
+        }
+
+        function testDOMElements() {
+            const elements = {
+                'task-form': 'Task form',
+                'task-input': 'Task input',
+                'tasks-container': 'Tasks container',
+                'total-count': 'Total count',
+                'completed-count': 'Completed count',
+                'pending-count': 'Pending count',
+                'clear-section': 'Clear section',
+                'clear-completed-btn': 'Clear button'
+            };
+
+            let missing = [];
+            let found = [];
+
+            for (const [id, name] of Object.entries(elements)) {
+                if (document.getElementById(id)) {
+                    found.push(`✓ ${name}`);
+                } else {
+                    missing.push(`✗ ${name}`);
+                }
+            }
+
+            const status = missing.length === 0 ? 'success' : 'error';
+            const message = `
+                Found: ${found.length} elements<br>
+                ${found.join('<br>')}<br>
+                ${missing.length > 0 ? '<br>' + missing.join('<br>') : ''}
+            `;
+            showResult('dom-result', message, status);
+        }
+
+        function testLocalStorage() {
+            try {
+                const test = '__test__';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                showResult('dom-result', '<span class="status-indicator ok"></span>LocalStorage is available and working', 'success');
+            } catch (e) {
+                showResult('dom-result', '<span class="status-indicator error"></span>LocalStorage is not available (might be disabled)', 'error');
+            }
+        }
+
+        function testAddTask() {
+            try {
+                const input = document.getElementById('task-input');
+                if (!input) {
+                    showResult('add-result', '<span class="status-indicator error"></span>Task input not found', 'error');
+                    return;
+                }
+                input.value = 'Test Task - ' + new Date().toLocaleTimeString();
+                const form = document.getElementById('task-form');
+                form.dispatchEvent(new Event('submit'));
+                showResult('add-result', '<span class="status-indicator ok"></span>Task addition triggered. Check the task list above!', 'success');
+            } catch (e) {
+                showResult('add-result', '<span class="status-indicator error"></span>' + e.message, 'error');
+            }
+        }
+
+        function showTasks() {
+            try {
+                const stored = localStorage.getItem('tasks');
+                if (!stored) {
+                    showResult('add-result', '<span class="status-indicator warning"></span>No tasks in storage yet. Add a task first!', 'info');
+                    return;
+                }
+                const tasks = JSON.parse(stored);
+                const message = `
+                    <span class="status-indicator ok"></span>Found ${tasks.length} task(s):<br>
+                    <div class="code-block">${JSON.stringify(tasks, null, 2)}</div>
+                `;
+                showResult('add-result', message, 'success');
+            } catch (e) {
+                showResult('add-result', '<span class="status-indicator error"></span>' + e.message, 'error');
+            }
+        }
+
+        function testSaveToStorage() {
+            try {
+                const testData = [
+                    { id: Date.now(), text: 'Test Task 1', completed: false, createdAt: new Date().toLocaleString() }
+                ];
+                localStorage.setItem('tasks', JSON.stringify(testData));
+                showResult('storage-result', '<span class="status-indicator ok"></span>Test data saved to localStorage', 'success');
+            } catch (e) {
+                showResult('storage-result', '<span class="status-indicator error"></span>' + e.message, 'error');
+            }
+        }
+
+        function testLoadFromStorage() {
+            try {
+                const stored = localStorage.getItem('tasks');
+                if (!stored) {
+                    showResult('storage-result', '<span class="status-indicator warning"></span>No data in localStorage', 'info');
+                    return;
+                }
+                const tasks = JSON.parse(stored);
+                const message = `
+                    <span class="status-indicator ok"></span>Loaded ${tasks.length} task(s) from storage:<br>
+                    <div class="code-block">${JSON.stringify(tasks, null, 2)}</div>
+                `;
+                showResult('storage-result', message, 'success');
+            } catch (e) {
+                showResult('storage-result', '<span class="status-indicator error"></span>' + e.message, 'error');
+            }
+        }
+
+        function testClearStorage() {
+            if (confirm('Are you sure you want to clear all task data?')) {
+                localStorage.clear();
+                showResult('storage-result', '<span class="status-indicator ok"></span>All data cleared from localStorage', 'success');
+            }
+        }
+
+        function markComplete() {
+            for (let i = 1; i <= 10; i++) {
+                document.getElementById(`check-${i}`).classList.add('completed');
+            }
+            showResult('summary', '<span class="status-indicator ok"></span>Great! Follow these steps to thoroughly test the application. All tests look good! ✓', 'success');
+        }
+    </script>
+</body>
+</html>

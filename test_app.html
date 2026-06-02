@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Test</title>
+    <link rel="stylesheet" href="src/static/styles.css">
+    <style>
+        .test-console {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            margin-top: 2rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .test-log {
+            margin: 0.5rem 0;
+        }
+        .test-log.error {
+            color: #f48771;
+        }
+        .test-log.success {
+            color: #6a9955;
+        }
+        .test-log.info {
+            color: #569cd6;
+        }
+    </style>
+</head>
+<body>
+    <div class="skip-link">
+        <a href="#main-content">Skip to main content</a>
+    </div>
+
+    <header role="banner">
+        <div class="container">
+            <div class="header-content">
+                <h1>📝 Task Manager - DEBUG</h1>
+                <p class="subtitle">Testing task persistence...</p>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="container">
+        <section class="task-input-section" aria-labelledby="add-task-heading">
+            <h2 id="add-task-heading">Add a New Task</h2>
+            <form id="task-form" class="task-form">
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="task-input"
+                        class="task-input"
+                        placeholder="What needs to be done?"
+                        aria-label="Enter a new task"
+                        maxlength="200"
+                        required
+                    />
+                    <button type="submit" class="btn btn-primary" aria-label="Add task">
+                        Add Task
+                    </button>
+                </div>
+                <div class="char-count" aria-live="polite">
+                    <span id="char-count">0</span>/200
+                </div>
+            </form>
+        </section>
+
+        <section class="task-stats-section">
+            <div class="stats">
+                <div class="stat-box">
+                    <span class="stat-label">Total Tasks</span>
+                    <span class="stat-value" id="total-count">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Completed</span>
+                    <span class="stat-value completed" id="completed-count">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Pending</span>
+                    <span class="stat-value pending" id="pending-count">0</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="task-list-section" aria-labelledby="tasks-heading">
+            <div class="section-header">
+                <h2 id="tasks-heading">Your Tasks</h2>
+                <div class="filter-buttons">
+                    <button
+                        class="filter-btn active"
+                        data-filter="all"
+                        aria-pressed="true"
+                        aria-label="Show all tasks"
+                    >
+                        All
+                    </button>
+                    <button
+                        class="filter-btn"
+                        data-filter="active"
+                        aria-pressed="false"
+                        aria-label="Show active tasks"
+                    >
+                        Active
+                    </button>
+                    <button
+                        class="filter-btn"
+                        data-filter="completed"
+                        aria-pressed="false"
+                        aria-label="Show completed tasks"
+                    >
+                        Completed
+                    </button>
+                </div>
+            </div>
+
+            <div id="tasks-container" class="tasks-container" role="list">
+                <div class="empty-state">
+                    <p role="status" aria-live="polite">No tasks yet. Add one to get started! 🚀</p>
+                </div>
+            </div>
+
+            <div class="clear-section" id="clear-section" style="display: none">
+                <button id="clear-completed-btn" class="btn btn-secondary">
+                    Clear Completed Tasks
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="container">
+            <p>&copy; 2024 Task Manager. Built with ❤️ for productivity.</p>
+        </div>
+    </footer>
+
+    <section style="background: white; margin: 2rem auto; max-width: 900px; padding: 2rem; border-radius: 12px;">
+        <h2>Debug Console</h2>
+        <div id="debug-console" class="test-console"></div>
+        <div style="margin-top: 1rem;">
+            <button onclick="clearLocalStorage()" class="btn btn-secondary">Clear LocalStorage</button>
+            <button onclick="testAddTask()" class="btn btn-primary" style="margin-left: 0.5rem;">Test Add Task</button>
+            <button onclick="showStorageData()" class="btn btn-secondary" style="margin-left: 0.5rem;">Show Storage</button>
+        </div>
+    </section>
+
+    <script>
+        // Enhanced logging for debugging
+        const debugLog = (message, type = 'info') => {
+            const console = document.getElementById('debug-console');
+            const log = document.createElement('div');
+            log.className = `test-log ${type}`;
+            log.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            console.appendChild(log);
+            console.scrollTop = console.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        };
+
+        // Override window.console.error to capture errors
+        const originalError = window.console.error;
+        window.console.error = function(...args) {
+            debugLog(`ERROR: ${args.join(' ')}`, 'error');
+            originalError.apply(console, args);
+        };
+
+        // Test functions
+        function clearLocalStorage() {
+            localStorage.clear();
+            debugLog('LocalStorage cleared!', 'success');
+        }
+
+        function showStorageData() {
+            const stored = localStorage.getItem('tasks');
+            if (stored) {
+                debugLog(`Storage contains: ${stored}`, 'info');
+                try {
+                    const parsed = JSON.parse(stored);
+                    debugLog(`Parsed as: ${JSON.stringify(parsed, null, 2)}`, 'success');
+                } catch (e) {
+                    debugLog(`Failed to parse: ${e.message}`, 'error');
+                }
+            } else {
+                debugLog('No tasks in localStorage', 'info');
+            }
+        }
+
+        function testAddTask() {
+            const taskInput = document.getElementById('task-input');
+            taskInput.value = 'Test Task ' + new Date().toLocaleTimeString();
+            taskInput.dispatchEvent(new Event('input'));
+            const form = document.getElementById('task-form');
+            form.dispatchEvent(new Event('submit'));
+            debugLog('Test task added', 'success');
+        }
+
+        debugLog('Debug script loaded', 'success');
+    </script>
+
+    <script src="src/static/app.js"></script>
+
+    <script>
+        // Check for errors after app.js loads
+        setTimeout(() => {
+            debugLog('App initialization complete', 'success');
+            showStorageData();
+        }, 500);
+    </script>
+</body>
+</html>

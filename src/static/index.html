@@ -3,46 +3,124 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mergington High School Activities</title>
+    <meta name="description" content="A modern task manager application to organize and track your daily tasks." />
+    <title>Task Manager - Organize Your Tasks</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header>
-      <h1>Mergington High School</h1>
-      <h2>Extracurricular Activities</h2>
+    <div class="skip-link">
+      <a href="#main-content">Skip to main content</a>
+    </div>
+
+    <header role="banner">
+      <div class="container">
+        <div class="header-content">
+          <h1>📝 Task Manager</h1>
+          <p class="subtitle">Stay organized and track your tasks efficiently</p>
+        </div>
+      </div>
     </header>
 
-    <main>
-      <section id="activities-container">
-        <h3>Available Activities</h3>
-        <div id="activities-list">
-          <!-- Activities will be loaded here -->
-          <p>Loading activities...</p>
+    <main id="main-content" class="container">
+      <section class="task-input-section" aria-labelledby="add-task-heading">
+        <h2 id="add-task-heading">Add a New Task</h2>
+        <form id="task-form" class="task-form">
+          <div class="input-group">
+            <input
+              type="text"
+              id="task-input"
+              class="task-input"
+              placeholder="What needs to be done?"
+              aria-label="Enter a new task"
+              maxlength="200"
+              required
+            />
+            <button type="submit" class="btn btn-primary" aria-label="Add task">
+              Add Task
+            </button>
+          </div>
+          <div class="char-count" aria-live="polite">
+            <span id="char-count">0</span>/200
+          </div>
+        </form>
+      </section>
+
+      <section class="task-stats-section">
+        <div class="stats">
+          <div class="stat-box">
+            <span class="stat-label">Total Tasks</span>
+            <span class="stat-value" id="total-count">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Completed</span>
+            <span class="stat-value completed" id="completed-count">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Pending</span>
+            <span class="stat-value pending" id="pending-count">0</span>
+          </div>
         </div>
       </section>
 
-      <section id="signup-container">
-        <h3>Sign Up for an Activity</h3>
-        <form id="signup-form">
-          <div class="form-group">
-            <label for="email">Student Email:</label>
-            <input type="email" id="email" required placeholder="your-email@mergington.edu" />
+      <section class="task-list-section" aria-labelledby="tasks-heading">
+        <div class="section-header">
+          <h2 id="tasks-heading">Your Tasks</h2>
+          <div class="filter-buttons">
+            <button
+              class="filter-btn active"
+              data-filter="all"
+              aria-pressed="true"
+              aria-label="Show all tasks"
+            >
+              All
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="active"
+              aria-pressed="false"
+              aria-label="Show active tasks"
+            >
+              Active
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="completed"
+              aria-pressed="false"
+              aria-label="Show completed tasks"
+            >
+              Completed
+            </button>
           </div>
-          <div class="form-group">
-            <label for="activity">Select Activity:</label>
-            <select id="activity" required>
-              <option value="">-- Select an activity --</option>
-              <!-- Activity options will be loaded here -->
-            </select>
+        </div>
+
+        <div id="tasks-container" class="tasks-container" role="list">
+          <div class="empty-state">
+            <p role="status" aria-live="polite">No tasks yet. Add one to get started! 🚀</p>
           </div>
-          <button type="submit">Sign Up</button>
-        </form>
-        <div id="message" class="hidden"></div>
+        </div>
+
+        <div class="clear-section" id="clear-section" style="display: none">
+          <button id="clear-completed-btn" class="btn btn-secondary">
+            Clear Completed Tasks
+          </button>
+        </div>
+      </section>
+
+      <section class="info-section">
+        <h2>Tips for Success</h2>
+        <ul>
+          <li>Click the checkbox to mark tasks as complete</li>
+          <li>Click the delete button to remove a task</li>
+          <li>Use filters to view specific task categories</li>
+          <li>Your tasks are saved locally in your browser</li>
+        </ul>
       </section>
     </main>
 
-    <footer>
-      <p>&copy; 2023 Mergington High School</p>
+    <footer role="contentinfo">
+      <div class="container">
+        <p>&copy; 2024 Task Manager. Built with ❤️ for productivity.</p>
+      </div>
     </footer>
 
     <script src="app.js"></script>
